@@ -281,7 +281,7 @@ class AdminIntegrationTest(test_utils.GenericTestBase):
 
         self.logout()
 
-    def test_without_topic_id_dummy_stories_action_is_not_performed(# pylint: disable=line-too-long
+    def test_dummy_story_generation_fail_without_topic_id(# pylint: disable=line-too-long
         self
     ) -> None:
         self.login(self.CURRICULUM_ADMIN_EMAIL, is_super_admin=True)
@@ -302,7 +302,7 @@ class AdminIntegrationTest(test_utils.GenericTestBase):
 
         self.logout()
 
-    def test_without_num_dummy_stories_to_generate_action_is_not_performed( # pylint: disable=line-too-long
+    def test_dummy_story_generation_fail_without_num_dummy_stories_to_generate( # pylint: disable=line-too-long
         self
     ) -> None:
         self.login(self.CURRICULUM_ADMIN_EMAIL, is_super_admin=True)
