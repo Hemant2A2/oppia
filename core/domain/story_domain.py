@@ -1647,10 +1647,10 @@ class Story:
                 belongs.
             url_fragment: str. The url fragment of the story.
             meta_tag_content: Optional[str]. The meta tag content of the story.
-            thumbnail_filename: Optional[str]. The filename for the thumbnail of 
-                the story.
-            thumnail_bg_color: Optional[str]. The background color for the thumbnail 
+            thumbnail_filename: Optional[str]. The filename for the thumbnail 
                 of the story.
+            thumbnail_bg_color: Optional[str]. The background color for the 
+                thumbnail of the story.
 
         Returns:
             Story. The Story domain object with the default values.
