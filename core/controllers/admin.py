@@ -1770,19 +1770,8 @@ class AdminHandler(
                     string.ascii_lowercase, k=10))
                 story = story_domain.Story.create_default_story(
                     story_id, f'dummy_title{i}', 'description',
-                    topic_id, url_fragment)
-                story.update_meta_tag_content('dummy_meta')
-                raw_image = b''
-                with open(
-                    'core/tests/data/thumbnail.svg', 'rt',
-                    encoding='utf-8') as svg_file:
-                    svg_file_content = svg_file.read()
-                    raw_image = svg_file_content.encode('ascii')
-                fs_services.save_original_and_compressed_versions_of_image(
-                    'thumbnail.svg', feconf.ENTITY_TYPE_STORY, story_id,
-                    raw_image, 'thumbnail', False)
-                story.update_thumbnail_filename('thumbnail.svg')
-                story.update_thumbnail_bg_color('#B3D8F1')
+                    topic_id, url_fragment, 'dummy_meta',
+                    'thumbnail.svg', '#B3D8F1')
                 story_services.save_new_story(str(self.user_id), story)
                 topic_services.add_canonical_story(
                     str(self.user_id), topic_id, story_id)
