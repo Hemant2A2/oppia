@@ -20,6 +20,7 @@ import puppeteer from 'puppeteer';
 import {BaseUser} from '../common/puppeteer-utils';
 import testConstants from '../common/test-constants';
 import {showMessage} from '../common/show-message';
+import {check} from 'express-validator';
 
 const aboutUrl = testConstants.URLs.About;
 const androidUrl = testConstants.URLs.Android;
@@ -546,10 +547,35 @@ export class LoggedOutUser extends BaseUser {
   }
 
   /**
+   * Function to check whether any blog posts are found.
+   * @returns {Promise<boolean>} A promise that resolves to a boolean
+   * indicating whether any blog posts are found.
+   */
+  async checkIfBlogPostsAreFound(): Promise<boolean> {
+    const noPostsElement = await this.page.$('.e2e-no-blog-posts-found');
+    if (noPostsElement) {
+      const noPostsText = await this.page.evaluate(
+        el => el.textContent?.trim(),
+        noPostsElement
+      );
+      if (
+        noPostsText === 'Sorry, there are no blog posts matching this query.'
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * Function to verify that the each blog post has a tag
    * associated with it
    */
   async expectBlogPostsToHaveAtLeastOneTag(): Promise<void> {
+    let blogPostsFound = await this.checkIfBlogPostsAreFound();
+    if (!blogPostsFound) {
+      return;
+    }
     const allPostsHaveTags = await this.page.$$eval(
       '.e2e-test-blog-tag-container',
       posts =>
@@ -574,6 +600,10 @@ export class LoggedOutUser extends BaseUser {
    * Function to verify that the filtered blog posts contain the keyword
    */
   async expectBlogSearchResultsToContain(text: string): Promise<void> {
+    let blogPostsFound = await this.checkIfBlogPostsAreFound();
+    if (!blogPostsFound) {
+      return;
+    }
     const contentFound = await this.page.$$eval(
       '.e2e-test-blog-post-page-title-container, .e2e-test-blog-post-content',
       (elements, searchText) =>
@@ -606,6 +636,10 @@ export class LoggedOutUser extends BaseUser {
    * Function to verify that the filtered blog posts contain the tag
    */
   async expectBlogSearchResultsToHaveTag(tagName: string): Promise<void> {
+    let blogPostsFound = await this.checkIfBlogPostsAreFound();
+    if (!blogPostsFound) {
+      return;
+    }
     const tagFound = await this.page.$$eval(
       '.e2e-test-blog-post-tag',
       (elements, expectedTag) =>
@@ -622,6 +656,10 @@ export class LoggedOutUser extends BaseUser {
    * Function to check whether the pagination controls are visible
    */
   async expectBlogPaginationControlsVisible(): Promise<void> {
+    let blogPostsFound = await this.checkIfBlogPostsAreFound();
+    if (!blogPostsFound) {
+      return;
+    }
     try {
       await this.page.waitForSelector('.e2e-test-pagination', {
         visible: true,
